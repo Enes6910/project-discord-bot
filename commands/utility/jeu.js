@@ -3,28 +3,26 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('question')
-        .setDescription('Poser une question au bot.'),
+        .setName('feet')
+        .setDescription('Affiche une image aléatoire de pied.'),
     async execute(interaction) {
-        const question = interaction.options.getString('question');
-
         try {
-            const response = await axios.post('https://api.openai.com/v1/answers', {
-                question: question,
-                model: 'text-davinci-003', // Choisir le modèle GPT-3 approprié
-                examples_context: 'I am a bot trained by OpenAI to answer questions.' // Contexte facultatif
-            }, {
-                headers: {
-                    'Authorization': `Bearer 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`,
-                    'Content-Type': 'application/json'
+            // Appel à l'API Unsplash pour récupérer une image aléatoire de pied
+            const response = await axios.get('https://api.unsplash.com/photos/random', {
+                params: {
+                    query: 'feet', // Requête spécifique pour rechercher des images de pied
+                    client_id: 'YOUR_UNSPLASH_ACCESS_KEY' // Remplace par ta propre clé d'accès Unsplash
                 }
             });
 
-            const answer = response.data.answers[0];
-            await interaction.reply(answer);
+            // Récupération de l'URL de l'image
+            const imageUrl = response.data.urls.regular;
+
+            // Envoi de l'image dans le canal où la commande a été utilisée
+            await interaction.reply(imageUrl);
         } catch (error) {
-            console.error('Error fetching answer from OpenAI:', error);
-            await interaction.reply('Désolé, une erreur s\'est produite lors de la recherche de la réponse à votre question.');
+            console.error('Error fetching feet image:', error);
+            await interaction.reply('Désolé, une erreur s\'est produite lors de la récupération de l\'image de pied.');
         }
     },
 };

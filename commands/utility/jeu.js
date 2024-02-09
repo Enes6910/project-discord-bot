@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('imagerandom')
+        .setName('feet')
         .setDescription('Affiche une image aléatoire de pied.'),
     async execute(interaction) {
         try {
@@ -22,7 +22,7 @@ module.exports = {
             await interaction.reply(imageUrl);
         } catch (error) {
             console.error('Error fetching feey image:', error);
-            await interaction.reply('Désolé, une erreur s\'est produite lors de la récupération de l\'image de Brawl Stars.');
+            await interaction.reply('Désolé, une erreur s\'est produite lors de la récupération de l\'image de pieds qui puent.');
         }
     },
 };

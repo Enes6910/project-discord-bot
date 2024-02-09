@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('imagerandom')
+        .setName('feet')
         .setDescription('Affiche une image aléatoire de pied.'),
     async execute(interaction) {
         try {

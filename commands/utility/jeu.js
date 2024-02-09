@@ -22,7 +22,7 @@ module.exports = {
             await interaction.reply(imageUrl);
         } catch (error) {
             console.error('Error fetching feey image:', error);
-            await interaction.reply('Désolé, une erreur s\'est produite lors de la récupération de l\'image de Brawl Stars.');
+            await interaction.reply('Désolé, une erreur s\'est produite lors de la récupération de l\'image de pieds qui puent.');
         }
     },
 };

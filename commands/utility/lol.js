@@ -27,9 +27,18 @@ module.exports = {
 
             const pseudo = interaction.options.getString('pseudo');
 
-            // Choisir aléatoirement entre Nom_0.jpg et Nom_1.jpg
-            const randomImageIndex = Math.random() < 0.5 ? 0 : 1;
-            const randomImage = `${randomChampion}_${randomImageIndex}.jpg`;
+            // Choisir aléatoirement entre Nom_0.jpg et Nom_1.(jpg|mp4)
+            let randomImageIndex = 0;
+            let randomImageExtension = 'jpg';
+
+            // Vérifier si le champion a une vidéo au lieu d'une image
+            const championsWithVideo = ['Miss Fortune', 'Ezreal', 'Udyr', 'Samira', 'Seraphine'];
+            if (championsWithVideo.includes(randomChampion)) {
+                randomImageIndex = Math.random() < 0.5 ? 0 : 1;
+                randomImageExtension = randomImageIndex === 0 ? 'jpg' : 'mp4';
+            }
+
+            const randomImage = `${randomChampion}_${randomImageIndex}.${randomImageExtension}`;
 
             // Envoyer la réponse avec le pseudo du joueur, le champion aléatoire et le rôle aléatoire
             await interaction.reply({

@@ -1,53 +1,46 @@
+const fs = require('fs');
+const axios = require('axios');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('randomlol')
-        .setDescription('Affiche un personnage aléatoire de League of Legends avec un rôle aléatoire.')
+        .setDescription('Obtient un champion et un rôle aléatoire de League of Legends.')
         .addStringOption(option =>
             option.setName('pseudo')
-                .setDescription('Le pseudo du joueur.')
+                .setDescription('Le pseudo du joueur pour lequel le champion est choisi.')
                 .setRequired(true)),
     async execute(interaction) {
-        const pseudo = interaction.options.getString('pseudo');
-
         try {
-            // Liste des champions de League of Legends
-            const champions = [
-                'Aatrox', 'Ahri', 'Akali', 'Akshan', 'Alistar', 'Amumu', 'Anivia', 'Annie', 'Aphelios', 'Ashe',
-                'Aurelion Sol', 'Azir', 'Bard', 'Bel\'Veth', 'Blitzcrank', 'Brand', 'Braum', 'Briar', 'Caitlyn',
-                'Camille', 'Cassiopeia', 'Cho\'Gath', 'Corki', 'Darius', 'Diana', 'Dr. Mundo', 'Draven', 'Ekko',
-                'Elise', 'Evelynn', 'Ezreal', 'Fiddlesticks', 'Fiora', 'Fizz', 'Galio', 'Gangplank', 'Garen', 'Gnar',
-                'Gragas', 'Graves', 'Gwen', 'Hecarim', 'Heimerdinger', 'Hwei', 'Illaoi', 'Irelia', 'Ivern', 'Janna',
-                'Jarvan IV', 'Jax', 'Jayce', 'Jhin', 'Jinx', 'K\'Santé', 'Kai\'Sa', 'Kalista', 'Karma', 'Karthus',
-                'Kassadin', 'Katarina', 'Kayle', 'Kayn', 'Kennen', 'Kha\'Zix', 'Kindred', 'Kled', 'Kog\'Maw', 'LeBlanc',
-                'Lee Sin', 'Leona', 'Lillia', 'Lissandra', 'Lucian', 'Lulu', 'Lux', 'Maître Yi', 'Malphite', 'Malzahar',
-                'Maokai', 'Milio', 'Miss Fortune', 'Mordekaiser', 'Morgana', 'Naafiri', 'Nami', 'Nasus', 'Nautilus',
-                'Neeko', 'Nidalee', 'Nilah', 'Nocturne', 'Nunu et Willump', 'Olaf', 'Orianna', 'Ornn', 'Pantheon',
-                'Poppy', 'Pyke', 'Qiyana', 'Quinn', 'Rakan', 'Rammus', 'Rek\'Sai', 'Rell', 'Renata Glasc', 'Renekton',
-                'Rengar', 'Riven', 'Rumble', 'Ryze', 'Samira', 'Sejuani', 'Senna', 'Séraphine', 'Sett', 'Shaco',
-                'Shen', 'Shyvana', 'Singed', 'Sion', 'Sivir', 'Skarner', 'Smolder', 'Sona', 'Soraka', 'Swain', 'Sylas',
-                'Syndra', 'Tahm Kench', 'Taliyah', 'Talon', 'Taric', 'Teemo', 'Thresh', 'Tristana', 'Trundle',
-                'Tryndamere', 'Twisted Fate', 'Twitch', 'Udyr', 'Urgot', 'Varus', 'Vayne', 'Veigar', 'Vel\'Koz',
-                'Vex', 'Vi', 'Viego', 'Viktor', 'Vladimir', 'Volibear', 'Warwick', 'Wukong', 'Xayah', 'Xerath',
-                'Xin Zhao', 'Yasuo', 'Yone', 'Yorick', 'Yuumi', 'Zac', 'Zed', 'Zeri', 'Ziggs', 'Zilean', 'Zoé', 'Zyra'
-            ];
+            // Charger le fichier JSON des champions
+            const championsData = fs.readFileSync('champions.json');
+            const champions = JSON.parse(championsData).champions;
 
-            // Liste des rôles de League of Legends
+            // Sélectionner un champion aléatoire
+            const randomChampion = champions[Math.floor(Math.random() * champions.length)];
+
+            // Liste des rôles
             const roles = ['Top', 'Jungle', 'Mid', 'ADC', 'Support'];
 
-            // Sélection aléatoire d'un champion et d'un rôle
-            const randomChampion = champions[Math.floor(Math.random() * champions.length)];
+            // Sélectionner un rôle aléatoire
             const randomRole = roles[Math.floor(Math.random() * roles.length)];
 
-            // Construction de la réponse
-            const response = `Pseudo du joueur : ${pseudo}\nPersonnage : ${randomChampion}\nRôle : ${randomRole}`;
+            const pseudo = interaction.options.getString('pseudo');
 
-            // Envoi de la réponse
-            await interaction.reply(response);
+            // Choisir aléatoirement entre Nom_0.jpg et Nom_1.jpg
+            const randomImageIndex = Math.random() < 0.5 ? 0 : 1;
+            const randomImage = `${randomChampion}_${randomImageIndex}.jpg`;
+
+            // Envoyer la réponse avec le pseudo du joueur, le champion aléatoire et le rôle aléatoire
+            await interaction.reply({
+                content: `Pseudo du joueur : <@${interaction.user.id}>\nPersonnage : ${randomChampion}\nRôle : ${randomRole}`,
+                files: [`./champions/${randomImage}`] // Chemin de l'image aléatoire du champion
+            });
         } catch (error) {
-            console.error('Error fetching random LoL champion:', error);
-            await interaction.reply('Désolé, une erreur s\'est produite lors de la récupération du personnage aléatoire de League of Legends.');
+            console.error('Erreur lors de l\'exécution de la commande randomlol :', error);
+            await interaction.reply({
+                content: 'Désolé, une erreur s\'est produite lors de l\'exécution de la commande.'
+            });
         }
     },
 };

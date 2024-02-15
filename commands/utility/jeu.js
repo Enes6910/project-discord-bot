@@ -7,7 +7,7 @@ module.exports = {
         .setDescription('Affiche une image aléatoire de pied.'),
     async execute(interaction) {
         try {
-            // Appel à l'API Unsplash pour récupérer une image aléatoire de Brawl Stars
+            // Appel à l'API Unsplash pour récupérer une image aléatoire de pied
             const response = await axios.get('https://api.unsplash.com/photos/random', {
                 params: {
                     query: 'feet',

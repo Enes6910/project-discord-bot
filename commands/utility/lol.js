@@ -32,7 +32,7 @@ module.exports = {
             let randomImageExtension = 'jpg';
 
             // Vérifier si le champion a une vidéo au lieu d'une image
-            const championsWithVideo = ['Miss Fortune', 'Ezreal', 'Udyr', 'Samira', 'Seraphine'];
+            const championsWithVideo = ['Miss Fortune', 'Ezreal', 'Udyr', 'Samira', 'Seraphine','Sona'];
             if (championsWithVideo.includes(randomChampion)) {
                 randomImageIndex = Math.random() < 0.5 ? 0 : 1;
                 randomImageExtension = randomImageIndex === 0 ? 'jpg' : 'mp4';

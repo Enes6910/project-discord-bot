@@ -36,7 +36,7 @@ const compliments = [
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('compliment')
-        .setDescription('Replies with compliments sur enes')
+        .setDescription('Replies with compliments sur name')
         .addStringOption(option =>
             option.setName('name')
                 .setDescription('The name of the person to compliment')

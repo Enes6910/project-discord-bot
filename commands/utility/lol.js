@@ -27,23 +27,22 @@ module.exports = {
 
             const pseudo = interaction.options.getString('pseudo');
 
-            // Choisir aléatoirement entre Nom_0.jpg et Nom_1.(jpg|mp4)
-            let randomImageIndex = 0;
-            let randomImageExtension = 'jpg';
+            // Chemin du dossier du champion
+            const championFolder = `./champions/${randomChampion}`;
 
-            // Vérifier si le champion a une vidéo au lieu d'une image
-            const championsWithVideo = ['Miss Fortune', 'Ezreal', 'Udyr', 'Samira', 'Seraphine','Sona'];
-            if (championsWithVideo.includes(randomChampion)) {
-                randomImageIndex = Math.random() < 0.5 ? 0 : 1;
-                randomImageExtension = randomImageIndex === 0 ? 'jpg' : 'mp4';
-            }
+            // Lire les fichiers dans le dossier du champion
+            const files = fs.readdirSync(championFolder);
 
-            const randomImage = `${randomChampion}_${randomImageIndex}.${randomImageExtension}`;
+            // Filtrer les fichiers pour ne conserver que les images (jpg et jpeg)
+            const imageFiles = files.filter(file => file.endsWith('.jpg') || file.endsWith('.jpeg') || file.endsWith('.mp4'));
+
+            // Sélectionner une image aléatoire
+            const randomImage = imageFiles[Math.floor(Math.random() * imageFiles.length)];
 
             // Envoyer la réponse avec le pseudo du joueur, le champion aléatoire et le rôle aléatoire
             await interaction.reply({
                 content: `Pseudo du joueur : <@${interaction.user.id}>\nPersonnage : ${randomChampion}\nRôle : ${randomRole}`,
-                files: [`./champions/${randomImage}`] // Chemin de l'image aléatoire du champion
+                files: [`${championFolder}/${randomImage}`] // Chemin de l'image aléatoire du champion
             });
         } catch (error) {
             console.error('Erreur lors de l\'exécution de la commande randomlol :', error);
